@@ -115,7 +115,6 @@ export const getPeople = async (): Promise<IPeoples[]> => {
 
 export const getPerson = async (id: string): Promise<IPerson | null> => {
   try {
-    console.log(baseUrl + "/persons/" + id)
     const person: AxiosResponse<ApiGetPersonByIdResponse> = await axios.get(
       baseUrl + "/persons/" + id
     )

@@ -24,7 +24,6 @@ const FormOne = () => {
     
     useEffect(() => {
         const fetchPerson = async () => {
-            console.log(router.query)
             setPerson(await getPerson(router.query.person_id as string));
         };
 
