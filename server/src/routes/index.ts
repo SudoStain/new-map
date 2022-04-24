@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { getPoints, addPoint, updatePoint, deletePoint, addFile } from '../controllers/points'
-import { getPersons, addPeopleFile, addPeople, peopleCount  } from '../controllers/people'
+import { getPersons, addPeopleFile, addPeople, peopleCount, getPersonById  } from '../controllers/people'
 import { getForm, addForm , addFormTest} from '../controllers/forms'
 const router: Router = Router()
 
@@ -10,6 +10,7 @@ router.put("/edit-point/:id", updatePoint)
 router.post("/addFile", addFile)
 router.delete("/delete-point/:id", deletePoint)
 router.get("/persons", getPersons)
+router.get("/persons/:id", getPersonById)
 router.post("/add-people-file", addPeopleFile)
 router.post("/add-people", addPeople)
 router.get("/people-count", peopleCount)

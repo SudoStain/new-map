@@ -1,32 +1,38 @@
-import React, { FC, useState } from "react";
-
-
+import React, { useEffect, useState } from "react";
 import { SyncOutlined } from "@ant-design/icons";
 import TimePicker from "@mui/lab/TimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-
-import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
-
 import Button from "../../components/ui/Button";
-
 import { Container, Text } from "../ui";
-
 import styles from "./Contact.module.css";
 import TextField from "@mui/material/TextField";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import intervals from '../../intervals.json';
 import { useRouter } from 'next/router';
+import { getPerson } from '../../API';
 
 const FormOne = () => {
     const router = useRouter();
 
     const [loading, setLoading] = useState(false);
+    const [person, setPerson] = useState<IPerson>();
     
+    useEffect(() => {
+        const fetchPerson = async () => {
+            console.log(router.query)
+            setPerson(await getPerson(router.query.person_id as string));
+        };
+
+        if(router.query.person_id) {
+            fetchPerson();
+        }
+    }, [router.query]);
+
     const [value, setValue] = React.useState<Date | null>(
         new Date("2022-01-01T21:11:54")
     );
@@ -44,7 +50,7 @@ const FormOne = () => {
     const handleSubmit = () => {
         const activeIntervals = JSON.parse(localStorage.getItem('activeIntervals') || '{}');
 
-        activeIntervals[router.query.person_id as string] = Date.now() + (intervals.filter(interval => interval.label === 'second')[0].seconds * 1000);
+        activeIntervals[router.query.person_id as string] = Date.now() + ((person?.color_change_interval || 1) * 1000);
 
         localStorage.setItem('activeIntervals', JSON.stringify(activeIntervals));
 

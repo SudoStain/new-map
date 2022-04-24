@@ -43,6 +43,7 @@ type IPerson = {
   messages1: IMessage1[]
   messages2: IMessage2[]
   color: string
+  color_change_interval: number
 }
 
 type IMessage = {
@@ -98,7 +99,7 @@ interface IMapper {
 
 
 interface IPeoples {
-  _id: string
+  _id?: string
   first_name: string
   last_name: string
   address: string
@@ -107,10 +108,7 @@ interface IPeoples {
   postal_code: string
   rank: string
   person_id: number
-  
-
-
-
+  color_change_interval: number
 }
 
 interface ICallForm {
@@ -153,6 +151,9 @@ type ApiGetAllDataPeople = {
   person: People[]
 }
 
+type ApiGetPersonByIdResponse = {
+  person: IPerson
+}
 
 type ApiGetDataForm = {
   message: string

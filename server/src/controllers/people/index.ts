@@ -1,7 +1,8 @@
-import { Response, Request } from 'express'
-import { IPerson } from '../../types/type'
-import Person from '../../models/person'
-import FormCallTest from '../../models/callFormTest'
+import { Response, Request } from "express"
+import { IPerson } from "../../types/type"
+import Person from "../../models/person"
+import FormCallTest from "../../models/callFormTest"
+import mongoose from 'mongoose';
 
 const getPersons = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -12,10 +13,29 @@ const getPersons = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
+const getPersonById = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { id } = req.params;
+
+    if(!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Provided ID is invalid' });
+    }
+
+    const person = await Person.findById(id);
+
+    return res.status(200).json({ person });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
 const addPeople = async (req: Request, res: Response): Promise<void> => {
   try {
-    const body = req.body as Pick<IPerson, 
-      "first_name"
+    const body = req.body as Pick<
+      IPerson,
+      | "first_name"
       | "last_name"
       | "address"
       | "rank"
@@ -23,6 +43,7 @@ const addPeople = async (req: Request, res: Response): Promise<void> => {
       | "province"
       | "postal_code"
       | "person_id"
+      | "color_change_interval"
     >
 
     const person: IPerson = new Person({
@@ -33,14 +54,13 @@ const addPeople = async (req: Request, res: Response): Promise<void> => {
       city: body.city,
       province: body.province,
       postal_code: body.postal_code,
-      person_id: body.person_id
+      person_id: body.person_id,
+      color_change_interval: body.color_change_interval,
     })
 
     const newPerson: IPerson = await person.save()
 
-    res
-      .status(200)
-      .json({ message: "Perosn added", person: newPerson })
+    res.status(200).json({ message: "Perosn added", person: newPerson })
   } catch (error) {
     throw error
   }
@@ -83,7 +103,7 @@ const addPeopleFile = async (req: Request, res: Response): Promise<void> => {
   try {
     const addItems: IPerson[] = req.body
 
-    addItems.map((body:IPerson) => {
+    addItems.map((body: IPerson) => {
       const data: IPerson = new Person({
         first_name: body.first_name,
         last_name: body.last_name,
@@ -92,28 +112,23 @@ const addPeopleFile = async (req: Request, res: Response): Promise<void> => {
         city: body.city,
         province: body.province,
         postal_code: body.postal_code,
-        person_id: body.person_id
-    })
+        person_id: body.person_id,
+        color_change_interval: body.color_change_interval
+      })
 
-    let state = saveData(data)
-    // const newItem: IItem = await data.save()
-    if (!state)
-      res
-      .status(200)
-      .json({ message: "addFile failed" })
-  })
-  res
-    .status(200)
-    .json({ message: "addFile success" })
-} catch (error) {
-  throw error
-}
+      let state = saveData(data)
+      // const newItem: IItem = await data.save()
+      if (!state) res.status(200).json({ message: "addFile failed" })
+    })
+    res.status(200).json({ message: "addFile success" })
+  } catch (error) {
+    throw error
+  }
 }
 
 const saveData = async (data: IPerson) => {
   const newItem: IPerson = await data.save()
-  if (newItem)
-    return true
+  if (newItem) return true
 }
 
 // const peopleCount = async (req: Request, res: Response): Promise<void> => {
@@ -130,10 +145,9 @@ const saveData = async (data: IPerson) => {
 
 //     console.log(personName)
 //   } catch (error) {
-    
-//   }
-// } 
 
+//   }
+// }
 
 // const peopleCount = async (req: Request, res: Response): Promise<void> => {
 
@@ -143,19 +157,13 @@ const saveData = async (data: IPerson) => {
 
 //     const otherperson = await Person.estimatedDocumentCount()
 
-   
 //     console.log(person + otherperson )
 
 //     const query = { textValue:'qqq'}
 
-
 //     const personName = await FormCallTest.countDocuments(query)
 
-    
-
 //     console.log(personName)
-
-    
 
 //     const newName = await Person.estimatedDocumentCount()
 //     console.log(newName)
@@ -167,24 +175,16 @@ const saveData = async (data: IPerson) => {
 // // console.log(nameNew)
 
 //   } catch (error) {
-    
-//   }
-// } 
 
+//   }
+// }
 
 const peopleCount = async (req: Request, res: Response): Promise<void> => {
-try {
-  const counter = await FormCallTest.estimatedDocumentCount()
-  res.status(200).json(counter)
-  console.log(counter)
-  
-} catch (error) {
-  
-}
+  try {
+    const counter = await FormCallTest.estimatedDocumentCount()
+    res.status(200).json(counter)
+    console.log(counter)
+  } catch (error) {}
 }
 
-
-
-
-
-export { getPersons, addPeople, addPeopleFile, peopleCount }
+export { getPersons, addPeople, addPeopleFile, peopleCount, getPersonById }

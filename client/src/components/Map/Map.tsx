@@ -24,7 +24,7 @@ type Props = {
 const MyMapComponent: React.FC<Props> = compose (
   withProps({
     // isMarkerShown
-    googleMapURL: `https://maps.googleapis.com/maps/api/js?key=AIzaSyAcV_byXe1NiMSYYxbCfxmAHhi3zo9HWJw&libraries=geometry,drawing,places`,
+    googleMapURL: `https://maps.googleapis.com/maps/api/js?key=AIzaSyBFF-crk4zs6Q9unlebHvhtw9jSDrQZrvM&libraries=geometry,drawing,places`,
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `900px` }} />,
     mapElement: <div style={{ height: `100%` }} />,

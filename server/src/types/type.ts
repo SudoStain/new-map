@@ -9,6 +9,7 @@ export interface IPerson extends Document {
   postal_code: string
   rank: string
   person_id: number
+  color_change_interval: number
   impression_live: number
   impression_virtual: number
 }

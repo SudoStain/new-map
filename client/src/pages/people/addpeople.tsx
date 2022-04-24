@@ -1,30 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import {
-
-  Card,
-  CardSubtitle,
-  CardBody,
-  CardTitle,
-
-  Form,
-  FormGroup,
-  Label,
-  Col,
-  Input,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Alert
-} from 'reactstrap';
-
 import styles from "../../../styles/Home.module.css";
 import { toast } from 'react-toastify'
-
 import { Button, Container, Text } from "../../components/ui";
 import { FormAddPeople } from '../../API'
 import { useRouter } from 'next/router'
+import intervals from '../../intervals.json';
+import { capitalize } from '../../utils';
 
 const AddPeople = () => {
   const [addItem, setAddItem] = useState<IPeoples>({
@@ -35,7 +17,8 @@ const AddPeople = () => {
     province: '',
     postal_code: '',
     rank: '',
-    person_id: 0
+    person_id: 0,
+    color_change_interval: 1
   })
   const [success, setSuccess] = useState<Boolean>(false)
   const [error, setError] = useState<Boolean>(false)
@@ -51,7 +34,7 @@ const AddPeople = () => {
       postal_code: '',
       rank: '',
       person_id: 0, 
-   
+      color_change_interval: 1
     })
   }, [])
   
@@ -102,7 +85,8 @@ const AddPeople = () => {
     province: '',
     postal_code: '',
     rank: '',
-    person_id: 0
+    person_id: 0,
+    color_change_interval: 1
     })
   }
 
@@ -215,19 +199,12 @@ const AddPeople = () => {
           
             <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full px-3">
-                {/* <Select
-                  defaultValue={addItem.persons}
-                  onChange={(people: any) => {
-                    setAddItem({
-                      ...addItem,
-                      persons: people.map((person: { value: AddingPeople; }) => person.value),
-                    });
-                  }}
-                  options={people.map((person) => {
-                    return { Option, value: person._id, label: person.person_name };
-                  })}
-                  isMulti={true}
-                /> */}
+                <select className={styles.inputField} id="color_change_interval" name="color_change_interval" value={addItem.color_change_interval} onChange={handleChange}>
+                  <option selected disabled value={1}>Color Change Interval</option>
+                  { intervals.map(interval => (
+                    <option value={interval.seconds}>{capitalize(interval.label)}</option>
+                  ))}
+                </select>
               </div>
             </div>
             <div className="flex justify-center">
