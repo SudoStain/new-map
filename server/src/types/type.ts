@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document } from "mongoose"
 
 export interface IPerson extends Document {
   first_name: string
@@ -22,20 +22,17 @@ export interface IPoint extends Document {
   postal_code: string
   latitude: number
   longitude: number
-  persons?: IPerson[],
-  icon: string,
+  persons?: IPerson[]
+  icon: string
   location_id: number
 }
 
-
 export interface IImpresLive extends Document {
   impres_live: number
-  
 }
 
 export interface IImpresVirtual extends Document {
   impres_virtual: number
-  
 }
 
 export interface IPhoneCall extends Document {
@@ -43,15 +40,17 @@ export interface IPhoneCall extends Document {
   start: number
   end: number
   comment: string
-
 }
 
 export interface IPhoneCallTest extends Document {
-  textValue: string;
-  radioValue: string;
-  checkboxValue: string[];
-  dateValue: Date;
-  dropdownValue: string;
-  sliderValue: number;
+  textValue: string
+  radioValue: string
+  checkboxValue: string[]
+  dateValue: Date
+  dropdownValue: string
+  sliderValue: number
+}
 
+export interface ICallType extends Document {
+  name: string
 }
