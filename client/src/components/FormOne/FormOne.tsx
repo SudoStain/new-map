@@ -12,20 +12,28 @@ import styles from "./Contact.module.css";
 import TextField from "@mui/material/TextField";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
+import { getCallTypes } from '../../API';
 
 interface IProps {
-  person: IPerson;
+    person: IPerson;
 }
 
 const FormOne = ({ person }: IProps) => {
     const router = useRouter();
 
     const [loading, setLoading] = useState(false);
+    const [callTypes, setCallTypes] = useState<ICallType[]>([]);
 
-    const [value, setValue] = React.useState<Date | null>(
-        new Date("2022-01-01T21:11:54")
-    );
+    useEffect(() => {
+        const fetchCallTypes = async () => {
+            setCallTypes(await getCallTypes());
+        };
+
+        fetchCallTypes();
+    });
+
+    const [value, setValue] = React.useState<Date | null>(new Date("2022-01-01T21:11:54"));
 
     const handleChange = (newValue: Date | null) => {
         setValue(newValue);
@@ -38,105 +46,74 @@ const FormOne = ({ person }: IProps) => {
     };
 
     const handleSubmit = () => {
-        const activeIntervals = JSON.parse(localStorage.getItem('activeIntervals') || '{}');
+        const activeIntervals = JSON.parse(localStorage.getItem("activeIntervals") || "{}");
 
-        activeIntervals[router.query.person_id as string] = Date.now() + ((person?.color_change_interval || 1) * 1000);
+        activeIntervals[person._id] = Date.now() + (person?.color_change_interval || 1) * 1000;
 
-        localStorage.setItem('activeIntervals', JSON.stringify(activeIntervals));
+        localStorage.setItem("activeIntervals", JSON.stringify(activeIntervals));
 
-        router.push('/');
+        router.push("/");
     };
-    
-  return (
-      <>
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-    <Container>
-       
-    <div className="  p-20 rounded-md shadow-2xl">
-    <div className="text-center  pb-20"><Text variant="sectionHeading">Scheduled: Phone Call</Text></div>
-    <form className="w-full max-w-lg ">
-        
-    <div className="flex flex-wrap -mx-3 mb-6">
-    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-6">
-      
-      <FormControl sx={{ m: 0, minWidth: 233 }}>
-        <InputLabel id="demo-simple-select-label">Type of call</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={age}
-          label="Age"
-          onChange={handleChange1}
-        >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl>
-    </div>
-    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-    
-      <TimePicker
-        label="Start"
-        value={value}
-        onChange={handleChange}
-        renderInput={(params) => <TextField {...params} />}
-      />
-    </div>
-    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-    
-      <div className="relative">
-        <DesktopDatePicker
-          label="Date "
-          inputFormat="MM/dd/yyyy"
-          value={value}
-          onChange={handleChange}
-          renderInput={(params) => <TextField {...params} />}
-        />
-      </div>
-    </div>
-    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-  
-      <TimePicker
-        label="End"
-        value={value}
-        onChange={handleChange}
-        renderInput={(params) => <TextField {...params} />}
-      />
-    </div>
-        </div>
-   
 
-        <textarea
-          // value={message}
-          id="message"
-          placeholder="Comment"
-          className={styles.textField}
-          // onChange={(e) => {
-          //   setMessage(e.target.value);
-          // }}
-          // type="message"
-          name="message"
-          required
-        />
-        <Button
-          variant="flat"
-          type="submit"
-          onClick={handleSubmit}
-          className="rounded-md inline-block block w-full border border-gray-400  px-2 py-2 pr-6 rounded shadow   bg-white"
-        >
-          {loading ? <SyncOutlined spin /> : "Submit"}
-        </Button>
-       
-    </form>
-    </div>
- 
+    return (
+        <>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <Container>
+                    <div className="  p-20 rounded-md shadow-2xl">
+                        <div className="text-center  pb-20">
+                            <Text variant="sectionHeading">Scheduled: Phone Call</Text>
+                        </div>
+                        <form className="w-full max-w-lg ">
+                            <div className="flex flex-wrap -mx-3 mb-6">
+                                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-6">
+                                    <FormControl sx={{ m: 0, minWidth: 233 }}>
+                                        <InputLabel id="demo-simple-select-label">Type of call</InputLabel>
+                                        <Select labelId="demo-simple-select-label" id="demo-simple-select" value={age} label="Age" onChange={handleChange1}>
+                                            {callTypes.map(callType => (
+                                                <MenuItem key={callType._id} value={callType.duration}>{callType.name}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                    <TimePicker label="Start" value={value} onChange={handleChange} renderInput={(params) => <TextField {...params} />} />
+                                </div>
+                                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                    <div className="relative">
+                                        <DesktopDatePicker label="Date " inputFormat="MM/dd/yyyy" value={value} onChange={handleChange} renderInput={(params) => <TextField {...params} />} />
+                                    </div>
+                                </div>
+                                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                    <TimePicker label="End" value={value} onChange={handleChange} renderInput={(params) => <TextField {...params} />} />
+                                </div>
+                            </div>
 
-    
-  </Container>
-</LocalizationProvider>
-</>
-  )
-}
+                            <textarea
+                                // value={message}
+                                id="message"
+                                placeholder="Comment"
+                                className={styles.textField}
+                                // onChange={(e) => {
+                                //   setMessage(e.target.value);
+                                // }}
+                                // type="message"
+                                name="message"
+                                required
+                            />
+                            <Button
+                                variant="flat"
+                                type="submit"
+                                onClick={handleSubmit}
+                                className="rounded-md inline-block block w-full border border-gray-400  px-2 py-2 pr-6 rounded shadow   bg-white"
+                            >
+                                {loading ? <SyncOutlined spin /> : "Submit"}
+                            </Button>
+                        </form>
+                    </div>
+                </Container>
+            </LocalizationProvider>
+        </>
+    );
+};
 
-export default FormOne
+export default FormOne;

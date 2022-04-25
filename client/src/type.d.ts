@@ -189,4 +189,5 @@ type ApiGetDataFormNew = {
 interface ICallType {
     _id?: string;
     name: string;
+    duration: number;
 }

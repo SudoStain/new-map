@@ -7,6 +7,10 @@ const callTypeSchema = new Schema(
       type: String,
       required: true,
     },
+    duration: {
+      type: Number,
+      required: true
+    }
   },
   { timestamps: true }
 )

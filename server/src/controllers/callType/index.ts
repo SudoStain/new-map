@@ -16,13 +16,13 @@ export const getCallTypes = async (req: Request, res: Response) => {
 
 export const createCallType = async (req: Request, res: Response) => {
     try {
-        const body = req.body as Pick<ICallType, "name">
+        const body = req.body as Partial<ICallType>;
 
-        if(!body.name) {
+        if(!body.name || !body.duration) {
             return res.status(400).json({ error: 'Invalid request body' });
         }
 
-        const callType = await new CallType({ name: body.name }).save()
+        const callType = await new CallType({ name: body.name, duration: body.duration }).save()
 
         return res.status(201).json({ data: callType })
     } catch (error) {
