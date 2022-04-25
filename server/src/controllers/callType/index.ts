@@ -18,6 +18,10 @@ export const createCallType = async (req: Request, res: Response) => {
     try {
         const body = req.body as Pick<ICallType, "name">
 
+        if(!body.name) {
+            return res.status(400).json({ error: 'Invalid request body' });
+        }
+
         const callType = await new CallType({ name: body.name }).save()
 
         return res.status(201).json({ data: callType })
