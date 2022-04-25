@@ -18,7 +18,7 @@ const getPersonById = async (req: Request, res: Response): Promise<Response> => 
     const { id } = req.params;
 
     if(!id || !mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Provided ID is invalid' });
+      return res.status(404).json({ person: null });
     }
 
     const person = await Person.findById(id);

@@ -12,25 +12,16 @@ import styles from "./Contact.module.css";
 import TextField from "@mui/material/TextField";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
-import intervals from '../../intervals.json';
 import { useRouter } from 'next/router';
-import { getPerson } from '../../API';
 
-const FormOne = () => {
+interface IProps {
+  person: IPerson;
+}
+
+const FormOne = ({ person }: IProps) => {
     const router = useRouter();
 
     const [loading, setLoading] = useState(false);
-    const [person, setPerson] = useState<IPerson>();
-    
-    useEffect(() => {
-        const fetchPerson = async () => {
-            setPerson(await getPerson(router.query.person_id as string));
-        };
-
-        if(router.query.person_id) {
-            fetchPerson();
-        }
-    }, [router.query]);
 
     const [value, setValue] = React.useState<Date | null>(
         new Date("2022-01-01T21:11:54")

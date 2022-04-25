@@ -120,9 +120,8 @@ export const getPerson = async (id: string): Promise<IPerson | null> => {
     )
 
     return person.data.person
-  } catch (error: any) {
-    console.log(error.response)
-    throw new Error(error)
+  } catch (error) {
+    return error?.response?.data?.person;
   }
 }
 
