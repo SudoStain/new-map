@@ -144,7 +144,7 @@ const Persons: React.FC<Props> = ({ visible, data, updateMarker }) => {
                           className="fa-layers-text fa-inverse"
                           data-fa-transform="shrink-8 down-3"
                         >
-                          <Wave1>A</Wave1>
+                          <Wave1>{person.rank}</Wave1>
                         </span>
                       </span>
                     </Wave>
@@ -152,16 +152,14 @@ const Persons: React.FC<Props> = ({ visible, data, updateMarker }) => {
                 </div>
                 <div className="flex justify-center">
                   <div className=" -mt-10 text-center">
-                    <p className="mt-10 text-center text-xs">ID:</p>
+                    <p className="mt-10 text-center text-xs">ID: {person._id}</p>
                     <h4>
-                      {person.first_name} {person.rank} Filler
+                      {person.first_name} {person.last_name}
                     </h4>
                     <p className="-mt-6 font-bold">tester</p>
                     <p className="-mt-3 leading-4 text-xs ">
-                      123 Street Name Ave <br />
-                      Toronto ON M4G 2W3
-                      {person.address}
-                      {person.city}
+                      {person.address} <br/>
+                      {person.city} <br/>
                       {person.province}
                     </p>
                     <p className="text-xs">
